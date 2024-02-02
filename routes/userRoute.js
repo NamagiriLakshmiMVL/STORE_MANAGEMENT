@@ -12,10 +12,15 @@ router.post("/register",async(req,res)=>{
     }
 })
 
-router.get("/login",async(req,res)=>{
+router.post("/login",async(req,res)=>{
     try{
         const user = await userModel.findOne({userId:req.body.userId,password:req.body.password,verified:true})
-        user?res.send(user):res.send("Login failed")
+        if (user) {
+            res.send(user)
+            console.log(user)
+        } else {
+            res.send({ message: "Login Failed", user })
+        }
     }
     catch(err){
         res.send(err)
