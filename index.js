@@ -20,7 +20,7 @@ app.use("/bills", billRoute)
 
 
 
-mongoose.connect("mongodb+srv://namagiri:cCiIu8ERZEMsZg2o@cluster0.gothjqk.mongodb.net/?retryWrites=true&w=majority")
+mongoose.connect(process.env.MONGO_URL)
     .then(() => {
         console.log("Mongoose is connected")
         app.listen(PORT, () => console.log("Server Started on the Port", PORT))

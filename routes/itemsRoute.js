@@ -14,11 +14,11 @@ router.post("/add-items", async(req, res) => {
     }
 })
 
-
-router.get("/get-items", async(req, res) => {
+router.post("/get-items", async(req, res) => {
     try {
-        const items = await itemModel.find()
+        const items = await itemModel.find({ name: { $regex: req.body.data } })
         res.send(items)
+       
     }
     catch (err) {
         res.status(400).json(err)

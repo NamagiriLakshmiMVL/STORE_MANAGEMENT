@@ -9,7 +9,8 @@ const billSchema = mongoose.Schema(
         tax:{type:Number,required:true},
         subTotal:{type:Number,required:true},
         paymentMode:{type:String,required:true},
-        cartItems:{type:Array,required:true}
+        cartItems:{type:Array,required:true},
+        billId:{type:String,required:true}
     }
 )
 
