@@ -1,8 +1,9 @@
 const express = require("express")
 const itemModel = require("../model/itemsModel")
 const router = express.Router()
+const auth = require("../middleware/auth")
 
-router.post("/add-items", async(req, res) => {
+router.post("/add-items",auth, async(req, res) => {
     try {
         const newItem = new itemModel(req.body)
         await newItem.save()
@@ -14,7 +15,7 @@ router.post("/add-items", async(req, res) => {
     }
 })
 
-router.post("/get-items", async(req, res) => {
+router.post("/get-items",auth, async(req, res) => {
     try {
         const items = await itemModel.find({ name: { $regex: req.body.data } })
         res.send(items)
@@ -25,7 +26,7 @@ router.post("/get-items", async(req, res) => {
     }
 })
 
-router.post("/delete-items", async (req, res) => {
+router.post("/delete-items",auth, async (req, res) => {
     try {
         const deleted = await itemModel.findOneAndDelete({ _id: req.body.itemId })
         deleted ? res.send("Deleted Successfully") : res.status(400).send({ message: "Item Not Found" })
@@ -34,7 +35,7 @@ router.post("/delete-items", async (req, res) => {
     }
 })
 
-router.post("/edit-items", async (req, res) => {
+router.post("/edit-items",auth, async (req, res) => {
     try {
         const edited = await itemModel.findOneAndUpdate({ _id: req.body.itemId }, req.body)
         res.send("Edited Successfully")

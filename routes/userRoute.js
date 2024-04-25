@@ -3,12 +3,15 @@ const userModel = require("../model/userModel");
 const router = express.Router();
 const genPassword = require("../helper.js");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken")
+
+
 router.post("/register", async (req, res) => {
   try {
     const { password, email, name, mobile } = req.body;
     const isUserExists = await userModel.findOne({ email: email });
     if (isUserExists) {
-      res.send("Email Already Exists");
+      res.send({message:"Email Already Exists",token:token});
       return;
     }
     const hashedPassword = await genPassword(password);
@@ -19,9 +22,10 @@ router.post("/register", async (req, res) => {
       mobile,
     });
     await newUser.save();
-    res.send("User Added Successfully");
+    const token = jwt.sign({email:email},process.env.SECRET_KEY)
+    res.send({message:"User Added Successfully",token:token});
   } catch (err) {
-    res.send(err);
+    res.send({message:err});
   }
 });
 
@@ -33,17 +37,18 @@ router.post("/login", async (req, res) => {
       const storedDbPassword = newLogin.password;
       const isPasswordMatch = await bcrypt.compare(password, storedDbPassword);
       if (!isPasswordMatch) {
-        res.send("Invalid Credentials");
+        res.send({message:"Invalid Credentials",token:token});
         return;
       }
+      const token = jwt.sign({id:newLogin._id},process.env.SECRET_KEY)
 
-      res.send("Login Success");
+      res.send({message:"Login Success",token:token});
     } else {
-      res.send("Invalid Credentials");
+      res.send({message:"Invalid Credentials"});
       return;
     }
   } catch (err) {
-    res.send("Invalid Credentials");
+    res.send({message:"Invalid Credentials"});
   }
 });
 
