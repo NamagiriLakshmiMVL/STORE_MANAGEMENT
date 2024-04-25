@@ -11,7 +11,7 @@ router.post("/register", async (req, res) => {
     const { password, email, name, mobile } = req.body;
     const isUserExists = await userModel.findOne({ email: email });
     if (isUserExists) {
-      res.send({message:"Email Already Exists",token:token});
+      res.send({message:"Email Already Exists"});
       return;
     }
     const hashedPassword = await genPassword(password);
